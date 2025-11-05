@@ -1,15 +1,19 @@
+# Dockerfile
+
 FROM frappe/bench:latest
 
-# Copia los archivos necesarios
-COPY . /home/frappe/frappe-bench
+# Establece directorio de trabajo
+WORKDIR /home/frappe
 
-WORKDIR /home/frappe/frappe-bench
+# Crea el entorno de trabajo
+RUN bench init frappe-bench --frappe-branch version-14 \
+    && cd frappe-bench \
+    && bench new-site crm.local --mariadb-root-password admin --admin-password Admin123! --no-mariadb-socket \
+    && bench get-app erpnext --branch version-14 \
+    && bench --site crm.local install-app erpnext
 
-# Instala dependencias
-RUN bench setup requirements
-
-# Expone el puerto
+# Expone el puerto para producción
 EXPOSE 8000
 
-# Comando para iniciar el servidor
+# Comando de arranque (puedes cambiar a "bench start" si quieres modo desarrollo)
 CMD ["bench", "start"]
