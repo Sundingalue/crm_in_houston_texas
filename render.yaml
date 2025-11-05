@@ -1,6 +1,11 @@
 services:
   - type: web
-    name: crm_backend
+    name: crm-in-houston
     env: docker
-    dockerCommand: docker-compose up
-    plan: starter
+    plan: free
+    dockerfilePath: Dockerfile
+    buildFilter:
+      paths:
+        - Dockerfile
+        - requirements.txt
+    autoDeploy: true

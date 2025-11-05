@@ -1,15 +1,23 @@
-FROM frappe/bench:latest
+# Usa una imagen base oficial de Python
+FROM python:3.11-slim
 
-# Copia los archivos necesarios
-COPY . /home/frappe/frappe-bench
+# Instala dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/frappe/frappe-bench
+# Establece el directorio de trabajo
+WORKDIR /app
 
-# Instala dependencias
-RUN bench setup requirements
+# Copia todo el contenido al contenedor
+COPY . .
 
-# Expone el puerto
+# Instala dependencias de Python si existe requirements.txt
+RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+# Expone el puerto que usará el servidor
 EXPOSE 8000
 
-# Comando para iniciar el servidor
-CMD ["bench", "start"]
+# Comando de inicio (puedes cambiar esto según el framework que uses)
+CMD ["python", "-m", "http.server", "8000"]
