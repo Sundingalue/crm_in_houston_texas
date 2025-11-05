@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: crm_backend
+    env: docker
+    plan: starter
+    dockerfilePath: ./docker-compose.yml
+    autoDeploy: true
