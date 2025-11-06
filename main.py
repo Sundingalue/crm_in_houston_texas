@@ -4,5 +4,5 @@ from fastapi.responses import JSONResponse
 app = FastAPI()
 
 @app.get("/")
-def home():
-    return JSONResponse(content={"message": "¡El CRM In Houston Texas está funcionando!"})
+async def root():
+    return JSONResponse(content={"message": "¡El CRM In Houston Texas está funcionando correctamente!"})
