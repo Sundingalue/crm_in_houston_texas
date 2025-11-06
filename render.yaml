@@ -1,8 +1,9 @@
 services:
   - type: web
     name: crm-in-houston
-    env: docker
-    plan: free
-    repo: https://github.com/Sundingalue/crm_in_houston_texas
-    dockerfilePath: ./Dockerfile
-    autoDeploy: true
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
