@@ -1,44 +1,29 @@
-import React from 'react';
+// App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import { useAuthStore } from "./store/auth.js";
 
-function App() {
-  return (
-    <div style={{
-      backgroundColor: '#000',
-      color: '#fff',
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontFamily: 'Arial, sans-serif',
-      textAlign: 'center',
-      padding: '2rem'
-    }}>
-      <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>
-        CRM In Houston Texas
-      </h1>
-      
-      <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.8 }}>
-        Plataforma personalizada para agentes, clientes y analítica
-      </p>
-
-      <button style={{
-        backgroundColor: '#FFD700',
-        border: 'none',
-        padding: '1rem 2rem',
-        fontSize: '1rem',
-        fontWeight: 'bold',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        color: '#000',
-        transition: '0.3s'
-      }}
-        onClick={() => alert('Aquí irá el login del CRM')}
-      >
-        Entrar al CRM
-      </button>
-    </div>
-  );
+function PrivateRoute({ children }) {
+  const token = useAuthStore((s) => s.token);
+  if (!token) return <Navigate to="/login" replace />;
+  return children;
 }
 
-export default App;
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  );
+}
